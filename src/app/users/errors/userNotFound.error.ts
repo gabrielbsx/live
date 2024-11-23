@@ -1,6 +1,6 @@
-import { BadRequest } from "@/core/exceptions/badRequest.error";
+import { NotFoundException } from "@/core/exceptions/notFound.error";
 
-export class UserNotFound extends BadRequest {
+export class UserNotFoundException extends NotFoundException {
   constructor() {
     super("USER_NOT_FOUND");
   }

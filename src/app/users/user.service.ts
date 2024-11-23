@@ -8,9 +8,9 @@ import { UserService } from "./contracts/user.service";
 import { UserRepository } from "@/core/repository/user.repository";
 import { UserEntity } from "@/core/entity/user.entity";
 import { AuthUserInput, AuthUserOutput } from "./dtos/authUser.dto";
-import { UserNotFound } from "./errors/userNotFound.error";
+import { UserNotFoundException } from "./errors/userNotFound.error";
 import { CryptographyContract } from "@/core/contracts/cryptography.contract";
-import { WrongPassword } from "./errors/wrongPassword.error";
+import { WrongPasswordException } from "./errors/wrongPassword.error";
 import { randomUUID } from "crypto";
 
 export class UserServiceImpl implements UserService {
@@ -27,10 +27,8 @@ export class UserServiceImpl implements UserService {
       username,
     });
 
-    console.log(userFound);
-
     if (!userFound) {
-      throw new UserNotFound();
+      throw new UserNotFoundException();
     }
 
     const { password: passwordHashed } = userFound[0];
@@ -41,7 +39,7 @@ export class UserServiceImpl implements UserService {
     );
 
     if (!isPasswordMatched) {
-      throw new WrongPassword();
+      throw new WrongPasswordException();
     }
 
     return {
@@ -78,11 +76,33 @@ export class UserServiceImpl implements UserService {
   }
 
   async updateById(id: string, dto: InputUpdate<UserDTO>): Promise<UserDTO> {
-    throw new Error("Service not implemented yet!");
+    const userUpdateData = new UserEntity({ id, ...dto });
+
+    const { user, audit } = await this._userRepository.update(userUpdateData);
+
+    const userUpdatedDto = {
+      ...user,
+      id,
+      createdBy: audit.createdBy!,
+      createdAt: audit.createdAt!,
+    };
+
+    return userUpdatedDto;
   }
 
   async deleteById(id: string): Promise<UserDTO> {
-    throw new Error("Service not implemented yet!");
+    const userEntity = new UserEntity({
+      id,
+    } as UserDTO);
+
+    const { user, audit } = await this._userRepository.delete(userEntity);
+
+    return {
+      ...user,
+      id,
+      createdBy: audit.createdBy!,
+      createdAt: audit.createdAt!,
+    };
   }
 
   async filterByParams(params: InputFilter<UserDTO>): Promise<UserDTO[]> {

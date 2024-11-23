@@ -1,6 +1,6 @@
-import { BadRequest } from "@/core/exceptions/badRequest.error";
+import { BadRequestException } from "@/core/exceptions/badRequest.error";
 
-export class WrongPassword extends BadRequest {
+export class WrongPasswordException extends BadRequestException {
   constructor() {
     super("WRONG_PASSWORD");
   }
