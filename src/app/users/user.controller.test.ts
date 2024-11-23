@@ -46,9 +46,11 @@ const makeAuthUserDTO = (): AuthUserInput => ({
 
 describe("User Creation", () => {
   it("should create user correctly", async () => {
+    // ARRANGE
     const userController = makeSut();
     const createUserDTO = makeCreateUserDTO();
 
+    // ACT
     const userCreated = await userController.create(createUserDTO);
 
     const ignorableVars = {
@@ -56,6 +58,7 @@ describe("User Creation", () => {
       passwordConfirmation: undefined,
     };
 
+    // ASSERT
     expect({ ...ignorableVars, ...userCreated }).toMatchObject({
       ...createUserDTO,
       ...ignorableVars,
@@ -63,51 +66,77 @@ describe("User Creation", () => {
   });
 
   it("should throw an error if passwordConfirmation is invalid", async () => {
+    // ARRANGE
     const userController = makeSut();
     const createUserDTO = makeCreateUserDTO();
 
     createUserDTO.password = "invalid_password";
     createUserDTO.passwordConfirmation = "invalid_password_confirmation";
 
+    // ACT
     const userCreated = userController.create(createUserDTO);
 
+    // ASSERT
     await expect(userCreated).rejects.toThrowError(
       "CREATE_USER_INVALID_PASSWORD_CONFIRMATION"
     );
   });
 
   it("should throw an error if email is invalid", async () => {
+    // ARRANGE
     const userController = makeSut();
     const createUserDTO = makeCreateUserDTO();
 
     createUserDTO.email = "invalid_email";
 
+    // ACT
     const userCreated = userController.create(createUserDTO);
 
+    // ASSERT
     await expect(userCreated).rejects.toThrow("CREATE_USER_INVALID_EMAIL");
   });
 
   it("should throw an error if password is invalid", async () => {
+    // ARRANGE
     const userController = makeSut();
     const createUserDTO = makeCreateUserDTO();
 
     createUserDTO.password = "";
 
+    // ACT
     const userCreated = userController.create(createUserDTO);
 
+    // ASSERT
     await expect(userCreated).rejects.toThrow("CREATE_USER_INVALID_PASSWORD");
   });
 });
 
 describe("User Authentication", () => {
   it("should be authentication with a valid user", async () => {
+    // ARRANGE
     const userController = makeSut();
 
     const authUserDTO = makeAuthUserDTO();
 
+    // ACT
     const authUser = await userController.auth(authUserDTO);
 
+    // ASSERT
     expect(authUser).toBeTruthy();
     expect(authUser).toHaveProperty("token");
+  });
+
+  it("should be not authenticate with a invalid password", async () => {
+    // ARRANGE
+    const userController = makeSut();
+    const authUserDTO = makeAuthUserDTO();
+
+    authUserDTO.password = "invalid_password";
+
+    // ACT
+    const authUser = userController.auth(authUserDTO);
+
+    // ASSERT
+    await expect(authUser).rejects.toThrowError("WRONG_PASSWORD");
   });
 });
