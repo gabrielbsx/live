@@ -27,6 +27,8 @@ export class UserServiceImpl implements UserService {
       username,
     });
 
+    console.log(userFound);
+
     if (!userFound) {
       throw new UserNotFound();
     }
@@ -56,9 +58,11 @@ export class UserServiceImpl implements UserService {
       ...userWithoutAnyPassword
     } = userCreationInput;
 
+    const passwordHashed = await this._cryptography.hash(password);
+
     const userEntity = new UserEntity({
       ...userWithoutAnyPassword,
-      password,
+      password: passwordHashed,
     });
 
     const userCreated = await this._userRepository.create(userEntity);
