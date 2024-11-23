@@ -1,10 +1,10 @@
-import { ServiceContract } from "core/contracts/service.contract";
+import { ServiceContract } from "@/core/contracts/application/service.contract";
 import {
   UserCreationInput,
   UserCreationOutput,
   UserDTO,
-} from "../dtos/user.dto";
-import { AuthUserInput, AuthUserOutput } from "../dtos/authUser.dto";
+} from "@/app/users/dtos/user.dto";
+import { AuthUserInput, AuthUserOutput } from "@/app/users/dtos/authUser.dto";
 
 export interface UserService
   extends Omit<ServiceContract<UserDTO, string>, "create"> {

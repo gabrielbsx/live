@@ -1,16 +1,16 @@
-import { InputFilter, InputUpdate } from "@/core/contracts/dto.contract";
 import {
   UserCreationInput,
   UserCreationOutput,
   UserDTO,
 } from "./dtos/user.dto";
-import { UserService } from "./contracts/user.service";
-import { UserRepository } from "@/core/repository/user.repository";
+import { UserService } from "../../core/contracts/application/user.service";
+import { UserRepository } from "@/core/repositories/user.repository";
 import { AuthUserInput, AuthUserOutput } from "./dtos/authUser.dto";
-import { UserNotFoundException } from "./errors/userNotFound.error";
-import { CryptographyContract } from "@/core/contracts/cryptography.contract";
-import { WrongPasswordException } from "./errors/wrongPassword.error";
+import { UserNotFoundException } from "../../core/exceptions/users/userNotFound.error";
+import { CryptographyContract } from "@/core/contracts/infra/cryptography.contract";
+import { WrongPasswordException } from "../../core/exceptions/users/wrongPassword.error";
 import { randomUUID } from "crypto";
+import { InputFilter, InputUpdate } from "@/core/contracts/common/dto.contract";
 
 export class UserServiceImpl implements UserService {
   constructor(
@@ -21,12 +21,14 @@ export class UserServiceImpl implements UserService {
   async auth(authUserDto: AuthUserInput): Promise<AuthUserOutput> {
     const { email, username, password } = authUserDto;
 
-    const userFound = await this.filterByParams({
-      email,
-      username,
-    });
+    const params = {
+      ...(email && { email }),
+      ...(username && { username }),
+    };
 
-    if (!userFound) {
+    const userFound = await this.filterByParams(params);
+
+    if (!userFound.length) {
       throw new UserNotFoundException();
     }
 

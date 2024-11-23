@@ -1,17 +1,25 @@
-import { UserController } from "@/app/users/contracts/user.controller";
+import { UserController } from "@/core/contracts/application/user.controller";
 import { UserControllerImpl } from "@/app/users/user.controller";
 import { UserServiceImpl } from "@/app/users/user.service";
-import { CreateUserValidation } from "@/app/users/validators/createUser.validation";
 import { UserInMemoryRepository } from "@/infra/repository/in-memory/userInMemory.repository";
+import { BcryptCryptography } from "@/infra/criptography/bcryptCryptography";
+import { ZodCreateUserValidation } from "@/infra/validation/zod/createUser.validation";
+import { ZodAuthUserValidation } from "@/infra/validation/zod/authUser.validation";
 
 export class UserFactory {
   static create(): UserController {
     const userRepository = new UserInMemoryRepository();
-    const userService = new UserServiceImpl(userRepository);
-    const createUserValidation = new CreateUserValidation();
+    const cryptography = new BcryptCryptography();
+
+    const userService = new UserServiceImpl(userRepository, cryptography);
+
+    const createUserValidation = new ZodCreateUserValidation();
+    const authUserValidation = new ZodAuthUserValidation();
+
     const userController = new UserControllerImpl(
       createUserValidation,
-      userService
+      userService,
+      authUserValidation
     );
 
     return userController;

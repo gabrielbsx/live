@@ -1,4 +1,4 @@
-import { CryptographyContract } from "@/core/contracts/cryptography.contract";
+import { CryptographyContract } from "@/core/contracts/infra/cryptography.contract";
 import bcrypt from "bcryptjs";
 
 export class BcryptCryptography implements CryptographyContract {

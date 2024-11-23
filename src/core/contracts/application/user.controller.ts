@@ -1,10 +1,10 @@
-import { ControllerContract } from "core/contracts/controller.contract";
+import { ControllerContract } from "@/core/contracts/application/controller.contract";
 import {
   UserCreationInput,
   UserCreationOutput,
   UserDTO,
-} from "../dtos/user.dto";
-import { AuthUserInput, AuthUserOutput } from "../dtos/authUser.dto";
+} from "@/app/users/dtos/user.dto";
+import { AuthUserInput, AuthUserOutput } from "@/app/users/dtos/authUser.dto";
 
 export interface UserController
   extends Omit<ControllerContract<UserDTO, string>, "create"> {

@@ -1,6 +1,6 @@
-import { EntityMapper } from "@/core/contracts/entityMapper.contract";
+import { EntityMapper } from "@/core/contracts/common/entityMapper.contract";
 import { UserEntity } from "@/core/entity/user.entity";
-import { UserModel } from "../models/user.model";
+import { UserModel } from "@/core/models/user.model";
 
 export class UserMapper implements EntityMapper<UserEntity, UserModel> {
   async toData(entity: UserEntity): Promise<UserModel> {

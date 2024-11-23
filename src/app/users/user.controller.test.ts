@@ -2,11 +2,11 @@ import { describe, expect, it } from "vitest";
 import { UserCreationInput } from "./dtos/user.dto";
 import { UserInMemoryRepository } from "@/infra/repository/in-memory/userInMemory.repository";
 import { UserServiceImpl } from "./user.service";
-import { CreateUserValidation } from "./validators/createUser.validation";
 import { UserControllerImpl } from "./user.controller";
-import { AuthUserValidation } from "./validators/authUser.validation";
 import { BcryptCryptography } from "@/infra/criptography/bcryptCryptography";
 import { AuthUserInput } from "./dtos/authUser.dto";
+import { ZodCreateUserValidation } from "@/infra/validation/zod/createUser.validation";
+import { ZodAuthUserValidation } from "@/infra/validation/zod/authUser.validation";
 
 const makeSut = () => {
   // Infrastructure
@@ -17,8 +17,8 @@ const makeSut = () => {
   const userService = new UserServiceImpl(userRepository, cryptography);
 
   // Validations
-  const createUserValidation = new CreateUserValidation();
-  const authUserValidation = new AuthUserValidation();
+  const createUserValidation = new ZodCreateUserValidation();
+  const authUserValidation = new ZodAuthUserValidation();
 
   // App Controller
   const userController = new UserControllerImpl(
@@ -39,7 +39,7 @@ const makeCreateUserDTO = (): UserCreationInput => ({
 });
 
 const makeAuthUserDTO = (): AuthUserInput => ({
-  email: "valid_email@email.com",
+  email: "valid_email@valid.email",
   password: "valid_password",
   username: "valid_username",
 });

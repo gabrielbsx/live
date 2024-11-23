@@ -1,4 +1,4 @@
-import { InputCreation, InputFilter } from "./dto.contract";
+import { InputCreation, InputFilter } from "../contracts/common/dto.contract";
 
 export interface Repository<T, U> {
   create: (data: InputCreation<T>) => Promise<T>;

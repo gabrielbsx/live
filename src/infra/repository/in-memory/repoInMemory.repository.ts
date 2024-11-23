@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Repository } from "@/core/contracts/repository.contract";
+
 import { NotFoundException } from "@/core/exceptions/notFound.error";
 import { randomUUID } from "crypto";
-import { AlreadyExistsException } from "@/app/users/errors/alreadyExists.error";
+import { AlreadyExistsException } from "@/core/exceptions/users/alreadyExists.error";
 import { AuditModel } from "@/core/models/audit.model";
-import { InputCreation } from "@/core/contracts/dto.contract";
+import { Repository } from "@/core/repositories/repository.contract";
+import { InputCreation } from "@/core/contracts/common/dto.contract";
 
 type EntityStorage = Record<string, any[]>;
 

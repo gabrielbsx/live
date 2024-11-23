@@ -1,4 +1,4 @@
-import { UserRepository } from "@/core/repository/user.repository";
+import { UserRepository } from "@/core/repositories/user.repository";
 import { InMemoryRepository } from "./repoInMemory.repository";
 import { UserModel } from "@/core/models/user.model";
 

@@ -1,4 +1,8 @@
-import { InputCreation, InputFilter, InputUpdate } from "./dto.contract";
+import {
+  InputCreation,
+  InputFilter,
+  InputUpdate,
+} from "../common/dto.contract";
 
 export interface ServiceContract<T, U> {
   create: (dto: InputCreation<T>) => Promise<T>;
