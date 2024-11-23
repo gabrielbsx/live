@@ -3,12 +3,12 @@ import {
   UserCreationOutput,
   UserDTO,
 } from "./dtos/user.dto";
-import { UserService } from "../../core/contracts/application/user.service";
+import { UserService } from "@/core/contracts/application/user.service";
 import { UserRepository } from "@/core/repositories/user.repository";
 import { AuthUserInput, AuthUserOutput } from "./dtos/authUser.dto";
-import { UserNotFoundException } from "../../core/exceptions/users/userNotFound.error";
+import { UserNotFoundException } from "@/core/exceptions/users/userNotFound.error";
 import { CryptographyContract } from "@/core/contracts/infra/cryptography.contract";
-import { WrongPasswordException } from "../../core/exceptions/users/wrongPassword.error";
+import { WrongPasswordException } from "@/core/exceptions/users/wrongPassword.error";
 import { randomUUID } from "crypto";
 import { InputFilter, InputUpdate } from "@/core/contracts/common/dto.contract";
 

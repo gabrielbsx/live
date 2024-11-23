@@ -1,10 +1,10 @@
-import { UserController } from "../../core/contracts/application/user.controller";
+import { UserController } from "@/core/contracts/application/user.controller";
 import {
   UserCreationInput,
   UserCreationOutput,
   UserDTO,
 } from "./dtos/user.dto";
-import { UserService } from "../../core/contracts/application/user.service";
+import { UserService } from "@/core/contracts/application/user.service";
 import { AuthUserInput, AuthUserOutput } from "./dtos/authUser.dto";
 import { InputFilter, InputUpdate } from "@/core/contracts/common/dto.contract";
 import { AuthUserValidation } from "./validators/authUser.validation";
