@@ -31,7 +31,7 @@ export class UserServiceImpl implements UserService {
       throw new UserNotFound();
     }
 
-    const { password: passwordHashed } = userFound;
+    const { password: passwordHashed } = userFound[0];
 
     const isPasswordMatched = await this._cryptography.compare(
       passwordHashed,
@@ -81,7 +81,16 @@ export class UserServiceImpl implements UserService {
     throw new Error("Service not implemented yet!");
   }
 
-  async filterByParams(params: InputFilter<UserDTO>): Promise<UserDTO> {
-    throw new Error("Service not implemented yet!");
+  async filterByParams(params: InputFilter<UserDTO>): Promise<UserDTO[]> {
+    const userEntity = new UserEntity(params as UserDTO);
+
+    const users = await this._userRepository.findByParams(userEntity);
+
+    return users.map(({ user }) => ({
+      ...user,
+      id: String(user.id),
+      createdAt: new Date(user.createdAt!),
+      createdBy: String(user.createdBy),
+    }));
   }
 }

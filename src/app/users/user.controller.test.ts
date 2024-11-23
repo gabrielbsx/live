@@ -6,6 +6,7 @@ import { CreateUserValidation } from "./validators/createUser.validation";
 import { UserControllerImpl } from "./user.controller";
 import { AuthUserValidation } from "./validators/authUser.validation";
 import { BcryptCryptography } from "@/infra/criptography/bcryptCryptography";
+import { AuthUserInput } from "./dtos/authUser.dto";
 
 const makeSut = () => {
   // Infrastructure
@@ -35,6 +36,12 @@ const makeCreateUserDTO = (): UserCreationInput => ({
   email: "valid_email@valid.email",
   password: "valid_password",
   passwordConfirmation: "valid_password",
+});
+
+const makeAuthUserDTO = (): AuthUserInput => ({
+  email: "valid_email@email.com",
+  password: "valid_password",
+  username: "valid_username",
 });
 
 describe("User Creation", () => {
@@ -89,5 +96,18 @@ describe("User Creation", () => {
     const userCreated = userController.create(createUserDTO);
 
     await expect(userCreated).rejects.toThrow("CREATE_USER_INVALID_PASSWORD");
+  });
+});
+
+describe("User Authentication", () => {
+  it("should be authentication with a valid user", async () => {
+    const userController = makeSut();
+
+    const authUserDTO = makeAuthUserDTO();
+
+    const authUser = await userController.auth(authUserDTO);
+
+    expect(authUser).toBeTruthy();
+    expect(authUser).toHaveProperty("token");
   });
 });

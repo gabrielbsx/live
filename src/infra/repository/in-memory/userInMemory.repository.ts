@@ -40,7 +40,13 @@ export class UserInMemoryRepository implements UserRepository {
     throw new Error("It's not implemented yet!");
   }
 
-  async findByParams(_params: UserEntity): Promise<UserEntity> {
-    throw new Error("It's not implemented yet!");
+  async findByParams(params: Partial<UserEntity>): Promise<UserEntity[]> {
+    const users = UserInMemoryRepository.User.filter((user) =>
+      Object.entries(params).every(
+        ([key, value]) => user[key as keyof UserModel] === value
+      )
+    );
+
+    return users.map((user) => new UserEntity(user));
   }
 }
