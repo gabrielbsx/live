@@ -11,4 +11,4 @@ export type InputCreation<T> = Omit<T, IgnorableFields>;
 
 export type InputUpdate<T> = Omit<T, IgnorableFields>;
 
-export type InputFilter<T> = T;
+export type InputFilter<T> = Partial<T>;

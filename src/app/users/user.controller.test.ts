@@ -5,11 +5,21 @@ import { UserServiceImpl } from "./user.service";
 import { CreateUserValidation } from "./validators/createUser.validation";
 import { UserControllerImpl } from "./user.controller";
 import { AuthUserValidation } from "./validators/authUser.validation";
+import { BcryptCryptography } from "@/infra/criptography/bcryptCryptography";
 
 const makeSut = () => {
+  // Infrastructure
+  const cryptography = new BcryptCryptography();
+  const userRepository = new UserInMemoryRepository();
+
+  // Services
+  const userService = new UserServiceImpl(userRepository, cryptography);
+
+  // Validations
   const createUserValidation = new CreateUserValidation();
-  const userService = new UserServiceImpl(new UserInMemoryRepository());
   const authUserValidation = new AuthUserValidation();
+
+  // App Controller
   const userController = new UserControllerImpl(
     createUserValidation,
     userService,

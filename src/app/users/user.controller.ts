@@ -6,7 +6,7 @@ import {
 } from "./dtos/user.dto";
 import { CreateUserValidation } from "./validators/createUser.validation";
 import { UserService } from "./contracts/user.service";
-import { InputUpdate } from "@/core/contracts/dto.contract";
+import { InputFilter, InputUpdate } from "@/core/contracts/dto.contract";
 import { AuthUserValidation } from "./validators/authUser.validation";
 import { AuthUserInput, AuthUserOutput } from "./dtos/authUser.dto";
 
@@ -17,26 +17,26 @@ export class UserControllerImpl implements UserController {
     private readonly _authUserValidation: AuthUserValidation
   ) {}
 
-  async auth(authUserDto: AuthUserInput): Promise<AuthUserOutput> {
-    const validDto = await this._authUserValidation.validate(authUserDto);
-    return await this._userService.auth(validDto);
+  async auth(dto: AuthUserInput): Promise<AuthUserOutput> {
+    const authUserDto = await this._authUserValidation.validate(dto);
+    return await this._userService.auth(authUserDto);
   }
 
   async create(dto: UserCreationInput): Promise<UserCreationOutput> {
-    const validDto = await this._createUserValidation.validate(dto);
-    const userCreated = await this._userService.create(validDto);
+    const craeteUserDto = await this._createUserValidation.validate(dto);
+    const userCreated = await this._userService.create(craeteUserDto);
     return userCreated;
   }
 
-  async updateById(id: string, dto: InputUpdate<UserDTO>): Promise<UserDTO> {
+  async updateById(_id: string, _dto: InputUpdate<UserDTO>): Promise<UserDTO> {
     throw new Error("Not implemented yet!");
   }
 
-  async deleteById(id: string): Promise<UserDTO> {
+  async deleteById(_id: string): Promise<UserDTO> {
     throw new Error("Not implemented yet!");
   }
 
-  async filterByParams(params: UserDTO): Promise<UserDTO> {
+  async filterByParams(_params: InputFilter<UserDTO>): Promise<UserDTO> {
     throw new Error("Not implemented yet!");
   }
 }

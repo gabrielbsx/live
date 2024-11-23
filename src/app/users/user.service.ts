@@ -1,4 +1,4 @@
-import { InputUpdate } from "@/core/contracts/dto.contract";
+import { InputFilter, InputUpdate } from "@/core/contracts/dto.contract";
 import {
   UserCreationInput,
   UserCreationOutput,
@@ -9,9 +9,15 @@ import { UserRepository } from "@/core/repository/user.repository";
 import { UserEntity } from "@/core/entity/user.entity";
 import { AuthUserInput, AuthUserOutput } from "./dtos/authUser.dto";
 import { UserNotFound } from "./errors/userNotFound.error";
+import { CryptographyContract } from "@/core/contracts/cryptography.contract";
+import { WrongPassword } from "./errors/wrongPassword.error";
+import { randomUUID } from "crypto";
 
 export class UserServiceImpl implements UserService {
-  constructor(private readonly _userRepository: UserRepository) {}
+  constructor(
+    private readonly _userRepository: UserRepository,
+    private readonly _cryptography: CryptographyContract
+  ) {}
 
   async auth(authUserDto: AuthUserInput): Promise<AuthUserOutput> {
     const { email, username, password } = authUserDto;
@@ -25,7 +31,20 @@ export class UserServiceImpl implements UserService {
       throw new UserNotFound();
     }
 
-    
+    const { password: passwordHashed } = userFound;
+
+    const isPasswordMatched = await this._cryptography.compare(
+      passwordHashed,
+      password
+    );
+
+    if (!isPasswordMatched) {
+      throw new WrongPassword();
+    }
+
+    return {
+      token: randomUUID(),
+    };
   }
 
   async create(
@@ -62,7 +81,7 @@ export class UserServiceImpl implements UserService {
     throw new Error("Service not implemented yet!");
   }
 
-  async filterByParams(params: UserDTO): Promise<UserDTO> {
+  async filterByParams(params: InputFilter<UserDTO>): Promise<UserDTO> {
     throw new Error("Service not implemented yet!");
   }
 }
