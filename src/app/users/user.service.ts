@@ -6,7 +6,6 @@ import {
 } from "./dtos/user.dto";
 import { UserService } from "./contracts/user.service";
 import { UserRepository } from "@/core/repository/user.repository";
-import { UserEntity } from "@/core/entity/user.entity";
 import { AuthUserInput, AuthUserOutput } from "./dtos/authUser.dto";
 import { UserNotFoundException } from "./errors/userNotFound.error";
 import { CryptographyContract } from "@/core/contracts/cryptography.contract";
@@ -58,59 +57,42 @@ export class UserServiceImpl implements UserService {
 
     const passwordHashed = await this._cryptography.hash(password);
 
-    const userEntity = new UserEntity({
+    const userCreationDto = {
       ...userWithoutAnyPassword,
       password: passwordHashed,
-    });
+      createdBy: "1",
+    };
 
-    const userCreated = await this._userRepository.create(userEntity);
+    const userCreated = await this._userRepository.create(userCreationDto);
 
     const userCreatedMapped = {
       ...userWithoutAnyPassword,
-      id: String(userCreated.audit.id),
-      createdAt: new Date(userCreated.audit.createdAt!),
-      createdBy: String(userCreated.audit.createdBy),
+      id: String(userCreated.id),
+      createdAt: new Date(userCreated.createdAt!),
+      createdBy: String(userCreated.createdBy),
     };
 
     return userCreatedMapped;
   }
 
   async updateById(id: string, dto: InputUpdate<UserDTO>): Promise<UserDTO> {
-    const userUpdateData = new UserEntity({ id, ...dto });
+    const userUpdated = await this._userRepository.updateById(id, dto);
 
-    const { user, audit } = await this._userRepository.update(userUpdateData);
+    Object.assign(userUpdated, { password: undefined });
 
-    const userUpdatedDto = {
-      ...user,
-      id,
-      createdBy: audit.createdBy!,
-      createdAt: audit.createdAt!,
-    };
-
-    return userUpdatedDto;
+    return userUpdated;
   }
 
   async deleteById(id: string): Promise<UserDTO> {
-    const userEntity = new UserEntity({
-      id,
-    } as UserDTO);
+    const userDeleted = await this._userRepository.deleteById(id);
 
-    const { user, audit } = await this._userRepository.delete(userEntity);
-
-    return {
-      ...user,
-      id,
-      createdBy: audit.createdBy!,
-      createdAt: audit.createdAt!,
-    };
+    return userDeleted;
   }
 
   async filterByParams(params: InputFilter<UserDTO>): Promise<UserDTO[]> {
-    const userEntity = new UserEntity(params as UserDTO);
+    const users = await this._userRepository.findByParams(params);
 
-    const users = await this._userRepository.findByParams(userEntity);
-
-    return users.map(({ user }) => ({
+    return users.map((user) => ({
       ...user,
       id: String(user.id),
       createdAt: new Date(user.createdAt!),

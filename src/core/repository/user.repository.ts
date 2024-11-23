@@ -1,4 +1,4 @@
 import { Repository } from "../contracts/repository.contract";
-import { UserEntity } from "../entity/user.entity";
+import { UserModel } from "../models/user.model";
 
-export interface UserRepository extends Repository<UserEntity, string> {}
+export interface UserRepository extends Repository<UserModel, string> {}

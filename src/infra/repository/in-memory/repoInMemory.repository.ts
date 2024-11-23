@@ -1,18 +1,20 @@
-import { EntityMapper } from "@/core/contracts/entityMapper.contract";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Repository } from "@/core/contracts/repository.contract";
 import { NotFoundException } from "@/core/exceptions/notFound.error";
+import { randomUUID } from "crypto";
+import { AlreadyExistsException } from "@/app/users/errors/alreadyExists.error";
+import { AuditModel } from "@/core/models/audit.model";
+import { InputCreation } from "@/core/contracts/dto.contract";
 
-interface EntityBase {
-  id: string;
-}
+type EntityStorage = Record<string, any[]>;
 
-export class InMemoryRepository<T, U extends EntityBase>
+export class InMemoryRepository<T extends AuditModel>
   implements Repository<T, string>
 {
-  static data: Record<string, unknown> = {};
+  public static data: EntityStorage = {};
 
   static pull(entityName: string) {
-    if (!(InMemoryRepository.data as Record<string, unknown>)[entityName]) {
+    if (!InMemoryRepository.data[entityName]) {
       InMemoryRepository.data = {
         ...InMemoryRepository.data,
         [entityName]: [],
@@ -20,28 +22,55 @@ export class InMemoryRepository<T, U extends EntityBase>
     }
   }
 
-  constructor(
-    protected readonly _entityMapper: EntityMapper<T, U>,
-    protected readonly _entityName: string
-  ) {
+  constructor(protected readonly _entityName: string) {
     InMemoryRepository.pull(this._entityName);
   }
 
-  async create(data: T): Promise<T> {
-    const dataInMemory = await this._entityMapper.toData(data);
+  async create(data: InputCreation<T>): Promise<T> {
+    const existingEntity = InMemoryRepository.data[this._entityName].find(
+      (entity) =>
+        Object.entries(data).every(
+          ([key, value]) => entity[key as keyof T] === value
+        )
+    );
 
-    (InMemoryRepository.data[this._entityName] as U[]).push(dataInMemory);
+    if (existingEntity) {
+      throw new AlreadyExistsException();
+    }
 
-    return await this._entityMapper.toEntity(dataInMemory);
+    const dataCreation = {
+      ...data,
+      id: randomUUID(),
+      createdAt: new Date(),
+      createdBy: String(data.createdBy),
+    } as T;
+
+    InMemoryRepository.data[this._entityName].push(dataCreation);
+
+    return dataCreation;
   }
 
-  async update(data: T): Promise<T> {
-    const dataInMemory = await this._entityMapper.toData(data);
+  async updateById(id: string, data: Partial<T>): Promise<T> {
+    const dataInMemory = await this.findById(id);
 
-    const dataFound = (InMemoryRepository.data[this._entityName] as U[]).find(
+    const updatedData = {
+      ...dataInMemory,
+      ...data,
+      updatedAt: new Date(),
+    };
+
+    InMemoryRepository.data[this._entityName] = InMemoryRepository.data[
+      this._entityName
+    ].map((entity) => (entity.id === id ? updatedData : entity));
+
+    return updatedData;
+  }
+
+  async update(data: T): Promise<T[]> {
+    const dataFound = InMemoryRepository.data[this._entityName].filter(
       (entity) =>
-        Object.entries(entity).every(
-          ([key, value]) => entity[key as keyof U] === value
+        Object.entries(data).every(
+          ([key, value]) => entity[key as keyof T] === value
         )
     );
 
@@ -49,51 +78,76 @@ export class InMemoryRepository<T, U extends EntityBase>
       throw new NotFoundException();
     }
 
-    return await this._entityMapper.toEntity(dataInMemory);
+    dataFound.map((dataToUpdate) => ({
+      ...dataToUpdate,
+      updatedAt: new Date(),
+    }));
+
+    InMemoryRepository.data[this._entityName] = InMemoryRepository.data[
+      this._entityName
+    ].map((entity) =>
+      dataFound.some((item) => item.id === entity.id)
+        ? { ...entity, ...data, updatedAt: new Date() }
+        : entity
+    );
+
+    return dataFound;
   }
 
-  async delete(data: T): Promise<T> {
-    const dataInMemory = await this._entityMapper.toData(data);
+  async deleteById(id: string): Promise<T> {
+    const dataInMemory = await this.findById(id);
 
-    const dataFound = (InMemoryRepository.data[this._entityName] as U[]).find(
+    InMemoryRepository.data[this._entityName] = InMemoryRepository.data[
+      this._entityName
+    ].filter((entity) => id === entity.id);
+
+    return dataInMemory;
+  }
+
+  async delete(data: T): Promise<T[]> {
+    const dataFound = InMemoryRepository.data[this._entityName].filter(
       (entity) =>
-        Object.entries(entity).every(
-          ([key, value]) => entity[key as keyof U] === value
-        )
+        Object.entries(data).every(([key, value]) => entity[key] === value)
     );
 
     if (!dataFound) {
       throw new NotFoundException();
     }
 
-    return await this._entityMapper.toEntity(dataInMemory);
+    const dataDeleted = dataFound.map((dataToDelete) => ({
+      ...dataToDelete,
+      deletedAt: new Date(),
+    }));
+
+    InMemoryRepository.data[this._entityName] = InMemoryRepository.data[
+      this._entityName
+    ].filter((entity) => !dataFound.some((item) => item.id === entity.id));
+
+    return dataDeleted;
   }
 
   async findById(id: string): Promise<T> {
-    const dataInMemory = (
-      InMemoryRepository.data[this._entityName] as U[]
-    ).find((entity) => (entity.id as string) === id);
-
-    if (!dataInMemory) {
-      throw new NotFoundException();
-    }
-
-    return await this._entityMapper.toEntity(dataInMemory);
-  }
-
-  async findByParams(params: Partial<T>): Promise<T[]> {
-    const dataInMemory = (
-      InMemoryRepository.data[this._entityName] as U[]
-    ).filter((entity) =>
-      Object.entries(params).every(
-        ([key, value]) => entity[key as keyof U] === value
-      )
+    const dataInMemory = InMemoryRepository.data[this._entityName].find(
+      (entity) => entity.id === id
     );
 
     if (!dataInMemory) {
       throw new NotFoundException();
     }
 
-    return await Promise.all(dataInMemory.map(this._entityMapper.toEntity));
+    return dataInMemory;
+  }
+
+  async findByParams(params: Partial<T>): Promise<T[]> {
+    const dataInMemory = InMemoryRepository.data[this._entityName].filter(
+      (entity) =>
+        Object.entries(params).every(([key, value]) => entity[key] === value)
+    );
+
+    if (!dataInMemory) {
+      return [];
+    }
+
+    return dataInMemory;
   }
 }

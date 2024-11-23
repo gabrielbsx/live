@@ -4,7 +4,7 @@ export type IgnorableFields =
   | "updatedAt"
   | "deletedAt"
   | "deletedBy"
-  | "createdBy"
+  // | "createdBy"
   | "updatedBy";
 
 export type InputCreation<T> = Omit<T, IgnorableFields>;
