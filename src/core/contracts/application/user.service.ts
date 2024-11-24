@@ -1,4 +1,4 @@
-import { ServiceContract } from "./service.contract";
+import { ServiceContract } from "@/core/contracts/application/service.contract";
 import {
   UserCreationInput,
   UserCreationOutput,
