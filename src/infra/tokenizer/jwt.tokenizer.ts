@@ -1,4 +1,5 @@
 import { TokenizerContract } from "@/core/contracts/infra/tokenizer.contract";
+import { InvalidTokenException } from "@/core/exceptions/crypto/invalidToken.error";
 import jwt from "jsonwebtoken";
 
 export class JWTTokenizer implements TokenizerContract {
@@ -10,6 +11,15 @@ export class JWTTokenizer implements TokenizerContract {
   }
 
   async parse<T>(token: string): Promise<T> {
-    return (await jwt.verify(token, String(process.env.JWT_SECRET))) as T;
+    try {
+      const payloadParsed = (await jwt.verify(
+        token,
+        String(process.env.JWT_SECRET)
+      )) as T;
+
+      return payloadParsed;
+    } catch (_error) {
+      throw new InvalidTokenException();
+    }
   }
 }
