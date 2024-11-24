@@ -3,17 +3,17 @@ import { UserCreationInput } from "./dtos/userDto";
 import { UserInMemoryRepository } from "@/infra/repository/in-memory/userInMemoryRepository";
 import { UserServiceImpl } from "./userService";
 import { UserControllerImpl } from "./userController";
-import { BcryptCryptography } from "@/infra/cryptography/bcryptCryptographyAdapter";
+import { BcryptCryptographyAdapter } from "@/infra/cryptography/bcryptCryptographyAdapter";
 import { AuthUserInput } from "./dtos/authUserDto";
 import { ZodCreateUserValidation } from "@/infra/validation/zod/createUserValidation";
 import { ZodAuthUserValidation } from "@/infra/validation/zod/authUserValidation";
-import { JWTTokenizer } from "@/infra/token/jwtAdapter";
+import { JWTAdapter } from "@/infra/token/jwtAdapter";
 
 const makeSut = () => {
   // Infrastructure
-  const cryptography = new BcryptCryptography();
+  const cryptography = new BcryptCryptographyAdapter();
   const userRepository = new UserInMemoryRepository();
-  const tokenizer = new JWTTokenizer();
+  const tokenizer = new JWTAdapter();
 
   // Services
   const userService = new UserServiceImpl(
