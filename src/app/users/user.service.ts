@@ -9,13 +9,14 @@ import { AuthUserInput, AuthUserOutput } from "./dtos/authUser.dto";
 import { UserNotFoundException } from "@/core/exceptions/users/userNotFound.error";
 import { CryptographyContract } from "@/core/contracts/infra/cryptography.contract";
 import { WrongPasswordException } from "@/core/exceptions/users/wrongPassword.error";
-import { randomUUID } from "crypto";
 import { InputFilter, InputUpdate } from "@/core/contracts/common/dto.contract";
+import { TokenizerContract } from "@/core/contracts/infra/tokenizer.contract";
 
 export class UserServiceImpl implements UserService {
   constructor(
     private readonly _userRepository: UserRepository,
-    private readonly _cryptography: CryptographyContract
+    private readonly _cryptography: CryptographyContract,
+    private readonly _tokenizer: TokenizerContract
   ) {}
 
   async auth(authUserDto: AuthUserInput): Promise<AuthUserOutput> {
@@ -43,9 +44,11 @@ export class UserServiceImpl implements UserService {
       throw new WrongPasswordException();
     }
 
-    return {
-      token: randomUUID(),
-    };
+    Object.assign(userFound, { password: undefined });
+
+    const token = await this._tokenizer.generate(userFound);
+
+    return { token };
   }
 
   async create(
