@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev:api": "node --import tsx --watch ./src/main/index.ts",
-    "dev:app": "node --import tsx --watch ./src/main/index.ts",
+    "dev:web": "cd web && pnpm dev",
     "test:dev": "vitest --watch ./src/**/*.test.ts",
     "build": "tsup ./src"
   },
