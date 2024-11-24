@@ -1,6 +1,3 @@
-markdown
-Copy code
-
 # **WYD API** 🚀
 
 Bem-vindo ao **WYD API**, um projeto moderno e robusto que utiliza as melhores práticas e tecnologias para desenvolvimento backend. Este repositório tem como objetivo fornecer uma base sólida e escalável para aplicações Node.js.
