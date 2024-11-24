@@ -10,7 +10,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "describe": "aeria-sdk"
   },
   "dependencies": {
     "aeria-sdk": "^0.0.156",
