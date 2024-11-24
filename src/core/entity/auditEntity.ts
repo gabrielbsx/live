@@ -1,4 +1,4 @@
-import { MergeType } from "@/shared/types/merge.type";
+import { MergeType } from "@/shared/types/mergeType";
 
 export type AuditProps = {
   id?: string;

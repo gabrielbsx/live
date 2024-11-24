@@ -1,8 +1,8 @@
 import { z, ZodError } from "zod";
 import ZodGetErrorMessage from "@/infra/validation/zod/getErrorMessage";
-import { ValidationError } from "@/core/exceptions/validation.error";
-import { UserCreationInput } from "@/app/users/dtos/user.dto";
-import { CreateUserValidation } from "@/app/users/validators/createUser.validation";
+import { ValidationError } from "@/core/exceptions/validationException";
+import { UserCreationInput } from "@/app/users/dtos/userDto";
+import { CreateUserValidation } from "@/app/users/validators/createUserValidation";
 
 export class ZodCreateUserValidation implements CreateUserValidation {
   static schema = z

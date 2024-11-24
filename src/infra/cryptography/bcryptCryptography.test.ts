@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { BcryptCryptography } from "./bcryptCryptography";
+import { BcryptCryptographyAdapter } from "./bcryptCryptographyAdapter";
 
 const makeSut = () => {
-  const bcryptCryptography = new BcryptCryptography();
+  const bcryptCryptography = new BcryptCryptographyAdapter();
 
   return { bcryptCryptography };
 };

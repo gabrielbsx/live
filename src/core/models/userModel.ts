@@ -1,4 +1,4 @@
-import { AuditModel } from "./audit.model";
+import { AuditModel } from "./auditModel";
 
 export interface UserModel extends AuditModel {
   username: string;

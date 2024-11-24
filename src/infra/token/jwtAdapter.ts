@@ -1,8 +1,8 @@
-import { TokenizerContract } from "@/core/contracts/infra/tokenizer.contract";
-import { InvalidTokenException } from "@/core/exceptions/crypto/invalidToken.error";
+import { TokenContract } from "@/core/contracts/infra/tokenContract";
+import { InvalidTokenException } from "@/core/exceptions/crypto/invalidTokenException";
 import jwt from "jsonwebtoken";
 
-export class JWTTokenizer implements TokenizerContract {
+export class JWTAdapter implements TokenContract {
   async generate<T>(payload: T): Promise<string> {
     return await jwt.sign(
       JSON.stringify(payload),

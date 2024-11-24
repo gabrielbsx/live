@@ -1,7 +1,7 @@
-import { CryptographyContract } from "@/core/contracts/infra/cryptography.contract";
+import { CryptographyContract } from "@/core/contracts/infra/cryptographyContract";
 import bcrypt from "bcryptjs";
 
-export class BcryptCryptography implements CryptographyContract {
+export class BcryptCryptographyAdapter implements CryptographyContract {
   async compare(hashed: string, data: string): Promise<boolean> {
     return await bcrypt.compare(data, hashed);
   }

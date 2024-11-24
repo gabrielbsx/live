@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { UserCreationInput } from "./dtos/user.dto";
-import { UserInMemoryRepository } from "@/infra/repository/in-memory/userInMemory.repository";
-import { UserServiceImpl } from "./user.service";
-import { UserControllerImpl } from "./user.controller";
-import { BcryptCryptography } from "@/infra/cryptography/bcryptCryptography";
-import { AuthUserInput } from "./dtos/authUser.dto";
-import { ZodCreateUserValidation } from "@/infra/validation/zod/createUser.validation";
-import { ZodAuthUserValidation } from "@/infra/validation/zod/authUser.validation";
-import { JWTTokenizer } from "@/infra/tokenizer/jwt.tokenizer";
+import { UserCreationInput } from "./dtos/userDto";
+import { UserInMemoryRepository } from "@/infra/repository/in-memory/userInMemoryRepository";
+import { UserServiceImpl } from "./userService";
+import { UserControllerImpl } from "./userController";
+import { BcryptCryptography } from "@/infra/cryptography/bcryptCryptographyAdapter";
+import { AuthUserInput } from "./dtos/authUserDto";
+import { ZodCreateUserValidation } from "@/infra/validation/zod/createUserValidation";
+import { ZodAuthUserValidation } from "@/infra/validation/zod/authUserValidation";
+import { JWTTokenizer } from "@/infra/token/jwtAdapter";
 
 const makeSut = () => {
   // Infrastructure

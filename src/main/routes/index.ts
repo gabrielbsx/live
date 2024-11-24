@@ -1,14 +1,15 @@
-import { createRouter } from "aeria";
-import { UserFactory } from "@/main/factories/user.factory";
+import { createRouter, Result } from "aeria";
+import { UserFactory } from "@/main/factories/userFactory";
+import { UserCreationInput } from "@/app/users/dtos/userDto";
 
 export const router = createRouter();
 
-router.GET("/example/create-user", async (context) => {
+router.GET("/account/createAccount", async (context) => {
   const userController = UserFactory.create();
 
-  userController.create({});
+  const response = await userController.create(
+    context.request.body as unknown as UserCreationInput
+  );
 
-  return {
-    ok: true,
-  };
+  return Result.result(response);
 });

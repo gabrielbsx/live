@@ -1,14 +1,14 @@
-import { UserController } from "@/core/contracts/application/user.controller";
+import { UserController } from "@/core/contracts/application/userController";
 import {
   UserCreationInput,
   UserCreationOutput,
   UserDTO,
-} from "./dtos/user.dto";
-import { UserService } from "@/core/contracts/application/user.service";
-import { AuthUserInput, AuthUserOutput } from "./dtos/authUser.dto";
-import { InputFilter, InputUpdate } from "@/core/contracts/common/dto.contract";
-import { AuthUserValidation } from "./validators/authUser.validation";
-import { CreateUserValidation } from "./validators/createUser.validation";
+} from "./dtos/userDto";
+import { UserService } from "@/core/contracts/application/userService";
+import { AuthUserInput, AuthUserOutput } from "./dtos/authUserDto";
+import { InputFilter, InputUpdate } from "@/core/contracts/common/dtoContract";
+import { AuthUserValidation } from "./validators/authUserValidation";
+import { CreateUserValidation } from "./validators/createUserValidation";
 
 export class UserControllerImpl implements UserController {
   constructor(

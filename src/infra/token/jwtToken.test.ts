@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { JWTTokenizer } from "./jwt.tokenizer";
+import { JWTAdapter } from "./jwtAdapter";
 
 const makeSut = () => {
-  const jwtTokenizer = new JWTTokenizer();
+  const jwtTokenizer = new JWTAdapter();
 
   return { jwtTokenizer };
 };

@@ -1,22 +1,18 @@
-import {
-  UserCreationInput,
-  UserCreationOutput,
-  UserDTO,
-} from "./dtos/user.dto";
-import { UserService } from "@/core/contracts/application/user.service";
-import { UserRepository } from "@/core/repositories/user.repository";
-import { AuthUserInput, AuthUserOutput } from "./dtos/authUser.dto";
-import { UserNotFoundException } from "@/core/exceptions/users/userNotFound.error";
-import { CryptographyContract } from "@/core/contracts/infra/cryptography.contract";
-import { WrongPasswordException } from "@/core/exceptions/users/wrongPassword.error";
-import { InputFilter, InputUpdate } from "@/core/contracts/common/dto.contract";
-import { TokenizerContract } from "@/core/contracts/infra/tokenizer.contract";
+import { UserCreationInput, UserCreationOutput, UserDTO } from "./dtos/userDto";
+import { UserService } from "@/core/contracts/application/userService";
+import { UserRepository } from "@/core/repositories/userRepository";
+import { AuthUserInput, AuthUserOutput } from "./dtos/authUserDto";
+import { UserNotFoundException } from "@/core/exceptions/users/userNotFoundException";
+import { CryptographyContract } from "@/core/contracts/infra/cryptographyContract";
+import { WrongPasswordException } from "@/core/exceptions/users/wrongPasswordException";
+import { InputFilter, InputUpdate } from "@/core/contracts/common/dtoContract";
+import { TokenContract } from "@/core/contracts/infra/tokenContract";
 
 export class UserServiceImpl implements UserService {
   constructor(
     private readonly _userRepository: UserRepository,
     private readonly _cryptography: CryptographyContract,
-    private readonly _tokenizer: TokenizerContract
+    private readonly _tokenizer: TokenContract
   ) {}
 
   async auth(authUserDto: AuthUserInput): Promise<AuthUserOutput> {

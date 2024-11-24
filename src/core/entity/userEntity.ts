@@ -1,5 +1,5 @@
-import { MergeType } from "@/shared/types/merge.type";
-import { AuditEntity, AuditProps } from "./audit.entity";
+import { MergeType } from "@/shared/types/mergeType";
+import { AuditEntity, AuditProps } from "./auditEntity";
 
 type UserProps = {
   username: string;

@@ -1,5 +1,5 @@
-import { MergeType } from "@/shared/types/merge.type";
-import { AuditDTO } from "shared/data/audit.dto";
+import { MergeType } from "@/shared/types/mergeType";
+import { AuditDTO } from "@/shared/data/auditDto";
 
 interface UserPropsDTO {
   username: string;

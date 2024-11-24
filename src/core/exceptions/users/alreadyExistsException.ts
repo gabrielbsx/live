@@ -1,4 +1,4 @@
-import { BadRequestException } from "@/core/exceptions/badRequest.error";
+import { BadRequestException } from "@/core/exceptions/badRequestException";
 
 export class AlreadyExistsException extends BadRequestException {
   constructor() {
