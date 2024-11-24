@@ -1,5 +1,5 @@
 import { z, ZodError } from "zod";
-import ZodGetErrorMessage from "@/infra/validation/zod/getErrorMessage";
+import ZodGetErrorMessage from "./getErrorMessage";
 import { ValidationError } from "@/core/exceptions/validation.error";
 import { AuthUserDTO } from "@/app/users/dtos/authUser.dto";
 import { AuthUserValidation } from "@/app/users/validators/authUser.validation";

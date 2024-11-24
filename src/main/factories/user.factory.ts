@@ -5,13 +5,19 @@ import { UserInMemoryRepository } from "@/infra/repository/in-memory/userInMemor
 import { BcryptCryptography } from "@/infra/cryptography/bcryptCryptography";
 import { ZodCreateUserValidation } from "@/infra/validation/zod/createUser.validation";
 import { ZodAuthUserValidation } from "@/infra/validation/zod/authUser.validation";
+import { JWTTokenizer } from "@/infra/tokenizer/jwt.tokenizer";
 
 export class UserFactory {
   static create(): UserController {
     const userRepository = new UserInMemoryRepository();
     const cryptography = new BcryptCryptography();
+    const jwtAdapter = new JWTTokenizer();
 
-    const userService = new UserServiceImpl(userRepository, cryptography);
+    const userService = new UserServiceImpl(
+      userRepository,
+      cryptography,
+      jwtAdapter
+    );
 
     const createUserValidation = new ZodCreateUserValidation();
     const authUserValidation = new ZodAuthUserValidation();

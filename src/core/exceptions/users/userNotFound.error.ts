@@ -1,4 +1,4 @@
-import { NotFoundException } from "@/core/exceptions/notFound.error";
+import { NotFoundException } from "../notFound.error";
 
 export class UserNotFoundException extends NotFoundException {
   constructor() {

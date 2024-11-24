@@ -1,16 +1,41 @@
 {
-  "name": "live",
+  "name": "@live/real-app",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./src/main/index.ts",
+  "types": "src/main/index.ts",
   "type": "module",
   "scripts": {
-    "start:dev": "node --import tsx --watch ./src/main/index.ts",
-    "test:dev": "vitest --watch ./src/**/*.test.ts"
+    "dev:api": "node --import tsx --watch ./src/main/index.ts",
+    "dev:app": "node --import tsx --watch ./src/main/index.ts",
+    "test:dev": "vitest --watch ./src/**/*.test.ts",
+    "build": "tsup ./src"
+  },
+  "aeriaSdk": {
+    "publicUrl": {
+      "development": "http://localhost:3000/api"
+    },
+    "storage": {
+      "strategy": "localStorage",
+      "namespace": "aeria"
+    },
+    "mirrorPaths": [
+      ".aeria"
+    ]
   },
   "author": "gabrielbsx",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@aeriajs/builtins": "^0.0.214",
+    "@aeriajs/common": "^0.0.125",
+    "@aeriajs/core": "^0.0.214",
+    "@aeriajs/entrypoint": "^0.0.128",
+    "@aeriajs/http": "^0.0.150",
+    "@aeriajs/node-http": "^0.0.150",
+    "@aeriajs/security": "^0.0.214",
+    "@aeriajs/server": "^0.0.216",
+    "@aeriajs/types": "^0.0.107",
+    "@aeriajs/validation": "^0.0.139",
     "@eslint/js": "^9.15.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.7",
@@ -25,6 +50,8 @@
     "vitest": "^2.1.5"
   },
   "dependencies": {
+    "aeria": "^0.0.225",
+    "aeria-sdk": "^0.0.156",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
     "zod": "^3.23.8"

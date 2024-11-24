@@ -1,4 +1,4 @@
-import { ControllerContract } from "@/core/contracts/application/controller.contract";
+import { ControllerContract } from "./controller.contract";
 import {
   UserCreationInput,
   UserCreationOutput,
