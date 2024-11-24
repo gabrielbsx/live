@@ -27,13 +27,13 @@ export class UserServiceImpl implements UserService {
       ...(username && { username }),
     };
 
-    const userFound = await this.filterByParams(params);
+    const userFound = (await this.filterByParams(params)).at(0);
 
-    if (!userFound.length) {
+    if (!userFound) {
       throw new UserNotFoundException();
     }
 
-    const { password: passwordHashed } = userFound[0];
+    const { password: passwordHashed } = userFound;
 
     const isPasswordMatched = await this._cryptography.compare(
       passwordHashed,
